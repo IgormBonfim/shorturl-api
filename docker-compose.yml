@@ -1,6 +1,23 @@
 version: "3.9"
 
 services:
+  app:
+    container_name: go-app
+    image: shorturl-api
+    build: .
+    environment:
+      - APP_ENV=Production
+      - DB_USER=root
+      - DB_PASSWORD=senha123
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=url_shortener
+    ports:
+      - "8000:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy 
+    restart: always
   mysql:
     image: mysql:8.0
     container_name: mysql-url-shortener
@@ -12,6 +29,11 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   mysql_data:

@@ -14,6 +14,7 @@ import (
 
 func main() {
 	env := os.Getenv("APP_ENV")
+	log.Println(env)
 	if env != "Production" {
 		err := godotenv.Load()
 		if err != nil {
