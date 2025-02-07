@@ -1,0 +1,24 @@
+name: Build API
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Docker Build
+              run: docker build -t igorbonfim/shorturl-api:latest .
+            - name: Login Docker Hub
+              uses: docker/login-action@v2
+              with:
+                username: igorbonfim
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
+            - name: Push image to DockerHub
+              run: docker push igorbonfim/shorturl-api:latest
