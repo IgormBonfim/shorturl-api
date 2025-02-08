@@ -22,7 +22,7 @@ jobs:
         run : |
           ssh -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             cd ${{ secrets.DIRECTORY }}
-            docker compose pull
+            docker compose pull api
             docker compose up -d --no-deps --force-recreate api
           EOF
 
