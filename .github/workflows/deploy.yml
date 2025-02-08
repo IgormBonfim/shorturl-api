@@ -5,6 +5,7 @@ on:
       workflows: ["Build API"]
       types:
         - completed
+    workflow_dispatch:
 
 jobs:
   deploy:
