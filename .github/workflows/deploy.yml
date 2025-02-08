@@ -1,0 +1,30 @@
+name: Deploy API
+
+on:
+    workflow_run:
+      workflows: ["Build API"]
+      types:
+        - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/know_hosts
+
+      - name: Deploy
+        run : |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            cd ${{ secrets.DIRECTORY }}
+            docker compose pull
+            docker compose up -d --no-deps --force-recreate api
+          EOF
+
+
+
