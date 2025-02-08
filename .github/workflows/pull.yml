@@ -18,5 +18,6 @@ jobs:
             host: ${{ secrets.VPS_HOST }}
             username: ${{ secrets.VPS_USER }}
             key: ${{ secrets.SSH_KEY }}
-            script: docker compose pull api
-
+            script: |
+                cd ${{ secrets.DIRECTORY }}
+                docker compose pull api
