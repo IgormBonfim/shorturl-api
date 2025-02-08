@@ -1,21 +1,22 @@
-name: Deploy API
+name: Pull API Image
 
 on:
     workflow_run:
-      workflows: ["Pull API Image"]
+      workflows: ["Build API"]
       types:
         - completed
     workflow_dispatch:
 
 jobs:
-  deploy:
+  pull:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy
-        uses: appleboy/ssh-action@v1.2.0
-        with:
+        - name: Docker pull image
+          uses: appleboy/ssh-action@v1.2.0
+          with:
             host: ${{ secrets.VPS_HOST }}
             username: ${{ secrets.VPS_USER }}
             key: ${{ secrets.SSH_KEY }}
-            script: docker compose up -d --no-deps --force-recreate api
+            script: docker compose pull api
+
